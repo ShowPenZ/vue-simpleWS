@@ -1,6 +1,6 @@
 {
   "name": "vue-simple-ws",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "ShowPenZ <pengxiaoz1012@gmail.com> (https://ShowPenZ.github.io/)",
   "main": "dist/Websocket.min.js",
   "description": "simple websocket for Vue",
