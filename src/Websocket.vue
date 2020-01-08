@@ -1,3 +1,4 @@
+/*eslint function-call-argument-newline: ["error", "never"]*/
 <template>
   <div>
     <slot></slot>
@@ -10,20 +11,20 @@
 // const isFunction = typeOf("Function");
 
 export default {
-  name: "Vue-simple-Ws",
+  name: 'Vue-simple-Ws',
   props: {
     url: {
       type: String,
-      required: true
+      required: true,
     },
     debug: {
       type: Boolean,
-      default: false
+      default: false,
     },
     reconnect: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     const that = this;
@@ -33,31 +34,35 @@ export default {
       reconnectFailureTimes: 0,
       reconnectTimer: null,
       needReconnet: true,
-      WS: window.WebSocket
-        ? new window.WebSocket(that.url)
-        : new window.MozWebSocket(that.url)
+      WS: window.WebSocket ? new window.WebSocket(that.url) : new window.MozWebSocket(that.url),
     };
   },
   watch: {},
+
   mounted() {
     const that = this;
 
     that.structureWebSocket();
+  },
+  beforeDestroy() {
+    const that = this;
+
+    that.destroy();
   },
   methods: {
     structureWebSocket() {
       const that = this;
 
       that.WS.onopen = () => {
-        that.printLog("ws is connected");
+        that.printLog('ws is connected');
 
-        that.$emit("onOpen", that.sendData);
+        that.$emit('onOpen', that.sendData);
       };
 
       that.WS.onmessage = data => {
         that.printLog(`wsData:${data.data}`);
 
-        that.$emit("onMessage", data.data);
+        that.$emit('onMessage', data.data);
       };
 
       that.WS.onclose = e => {
@@ -65,7 +70,7 @@ export default {
 
         that.printLog(`WS is disconneted,reason:${reason}`);
 
-        that.$emit("onClose", code, reason, wasClean);
+        that.$emit('onClose', code, reason, wasClean);
 
         if (that.reconnect && that.needReconnet) {
           that.reconnectFailureTimes++;
@@ -73,9 +78,7 @@ export default {
           if (that.reconnectFailureTimes < 3) {
             that.reconnectTimer = window.setTimeout(() => {
               that.setState({
-                WS: window.WebSocket
-                  ? new window.WebSocket(that.url)
-                  : new window.MozWebSocket(that.url)
+                WS: window.WebSocket ? new window.WebSocket(that.url) : new window.MozWebSocket(that.url),
               });
               that.structureWebSocket();
             }, 15 * 1000);
@@ -84,7 +87,7 @@ export default {
       };
 
       that.WS.onerror = e => {
-        that.$emit("onError", e);
+        that.$emit('onError', e);
       };
     },
     sender(msg) {
@@ -118,14 +121,8 @@ export default {
       that.printLog(`WS is close`);
 
       that.WS.close();
-    }
+    },
   },
-  beforeDestroy() {
-    const that = this;
-
-    that.destroy();
-  }
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>
